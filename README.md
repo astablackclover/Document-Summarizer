@@ -1,4 +1,4 @@
-**Intelligent Document Analyzer**
+**Intelligent Document Summarizerr**
 
 _Overview_
 
