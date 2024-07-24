@@ -3,7 +3,7 @@ from tkinter import filedialog, messagebox, ttk
 import os
 import threading
 import pyttsx3
-from transformers import BartTokenizer, BartForConditionalGeneration
+from transformers import BartTokenizer, BartForConditionalGeneration, pipeline
 from textblob import TextBlob
 
 # Initialize BART tokenizer and model
@@ -12,6 +12,9 @@ summarizer_model = BartForConditionalGeneration.from_pretrained("facebook/bart-l
 
 # Initialize text-to-speech engine
 engine = pyttsx3.init()
+
+# Initialize a question-answering pipeline without specifying a revision
+qa_pipeline = pipeline("question-answering", model="deepset/roberta-base-squad2")
 
 def read_text_from_file(filepath):
     """
@@ -38,7 +41,7 @@ def summarize_document(text, progress_var):
     """
     This function summarizes the entire document using the BART model.
     """
-    max_chunk_length = 2048  # Define the desired maximum length size for input chunks
+    max_chunk_length = 1024  # Define the desired maximum length size for input chunks
     text_chunks = [text[i:i + max_chunk_length] for i in range(0, len(text), max_chunk_length)]
 
     summarized_chunks = []
@@ -58,9 +61,35 @@ def browse_file(progress_var):
     """
     filepath = filedialog.askopenfilename(title="Select File")
     if filepath:
-        analyze_document(filepath, progress_var)
+        prompt_category_selection(filepath, progress_var)
 
-def analyze_document(filepath, progress_var):
+def prompt_category_selection(filepath, progress_var):
+    """
+    This function prompts the user to select a document category.
+    """
+    category_window = tk.Toplevel(window)
+    category_window.title("Select Document Category")
+
+    label = tk.Label(category_window, text="Select Document Category:")
+    label.pack(pady=5)
+
+    category_var = tk.StringVar()
+    category_dropdown = ttk.Combobox(category_window, textvariable=category_var)
+    category_dropdown['values'] = ('Terms & Conditions', 'Rental & Lease Agreements', 'Privacy Policy', 'Employment Contract')
+    category_dropdown.pack(pady=5)
+
+    def on_category_selected():
+        category = category_var.get()
+        if category:
+            analyze_document(filepath, progress_var, category)
+            category_window.destroy()
+        else:
+            messagebox.showwarning("Warning", "Please select a document category.")
+
+    select_button = tk.Button(category_window, text="Select", command=on_category_selected)
+    select_button.pack(pady=5)
+
+def analyze_document(filepath, progress_var, category):
     """
     This function analyzes the document by summarizing its content and displaying it in the GUI.
     """
@@ -69,12 +98,49 @@ def analyze_document(filepath, progress_var):
         return
 
     summary = summarize_document(text, progress_var)
+    benefits, disadvantages = extract_benefits_and_disadvantages(summary, category)
+
     text_area.delete("1.0", tk.END)
-    text_area.insert(tk.END, summary)
+    text_area.insert(tk.END, f"Summary:\n{summary}\n\nBenefits:\n{benefits}\n\nDisadvantages:\n{disadvantages}")
 
     sentiment_label.configure(text="Performing sentiment analysis...")
     sentiment_analysis_thread = threading.Thread(target=perform_sentiment_analysis, args=(summary,))
     sentiment_analysis_thread.start()
+
+def extract_benefits_and_disadvantages(summary, category):
+    """
+    This function extracts benefits and disadvantages from the summarized text using contextual analysis.
+    """
+    questions = {
+        "Terms & Conditions": {
+            "benefits": "What are the benefits of agreeing to these terms and conditions?",
+            "disadvantages": "What are the disadvantages of agreeing to these terms and conditions?"
+        },
+        "Rental & Lease Agreements": {
+            "benefits": "What are the benefits of agreeing to this rental or lease agreement?",
+            "disadvantages": "What are the disadvantages of agreeing to this rental or lease agreement?"
+        },
+        "Privacy Policy": {
+            "benefits": "What are the benefits of agreeing to this privacy policy?",
+            "disadvantages": "What are the disadvantages of agreeing to this privacy policy?"
+        },
+        "Employment Contract": {
+            "benefits": "What are the benefits of agreeing to this employment contract?",
+            "disadvantages": "What are the disadvantages of agreeing to this employment contract?"
+        }
+    }
+
+    benefits = ""
+    disadvantages = ""
+
+    for key, question in questions[category].items():
+        result = qa_pipeline(question=question, context=summary)
+        if key == "benefits":
+            benefits = result['answer']
+        else:
+            disadvantages = result['answer']
+
+    return benefits, disadvantages
 
 def perform_sentiment_analysis(summary):
     """
@@ -120,6 +186,7 @@ def clear_text():
     text_area.delete("1.0", tk.END)
 
 def main():
+    global window
     window = tk.Tk()
     window.title("Document Summarizer")
 
