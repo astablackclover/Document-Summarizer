@@ -1,35 +1,39 @@
-**Description**
+**Intelligent Document Analyzer**
 
-**Document Summarizer** is a Tkinter-based GUI application designed to streamline the process of document analysis. This application enables users to:
+_Overview_
 
-**Summarize Documents:** Using the advanced BART (Bidirectional and Auto-Regressive Transformers) model, the application generates concise summaries of lengthy documents, making it easier to grasp the main points quickly.
+The Intelligent Document Analyzer is an advanced tool designed to read, summarize, and evaluate technical documents. Leveraging state-of-the-art natural language processing (NLP) models, it provides key insights into the content, including a summary, benefits, and disadvantages. The tool also includes sentiment analysis and text-to-speech capabilities for a comprehensive document review experience.
 
-**Perform Sentiment Analysis**: The summarized text is analyzed to determine its sentiment, categorizing it as Beneficial, Risky, or Neutral. This feature is particularly useful for evaluating the tone and implications of contracts, reports, and other important documents.
+**Features**
+**Document Summarization**: Automatically generate concise summaries of lengthy documents.
+**Contextual Analysis:** Extract benefits and disadvantages based on the document type.
+**Sentiment Analysis:** Evaluate the sentiment of the document's content to gauge its overall tone.
+**Text-to-Speech:** Read out the summary and evaluation for easy comprehension.
+**Multi-format Support:** Works with various document types including terms & conditions, rental & lease agreements, privacy policies, and employment contracts.
+Technologies Used
+**Python:** Core programming language.
+**Transformers (Hugging Face):** For NLP models, including BART for summarization and Roberta for question-answering.
+**TextBlob:** For sentiment analysis.
+**Pyttsx3:** For text-to-speech functionality.
+**Tkinter:** For the graphical user interface (GUI).
 
-**Text-to-Speech Functionality:** The application includes a text-to-speech engine that reads the summarized text aloud, offering an auditory option for consuming the information.
 
+Here's a comprehensive project description for your Intelligent Document Analyzer that you can use for your GitHub repository:
 
-**Key Features**
-**User-Friendly Interface:** The application is built using Tkinter, providing a simple and intuitive interface for users.
+Intelligent Document Analyzer
+Overview
+The Intelligent Document Analyzer is an advanced tool designed to read, summarize, and evaluate technical documents. Leveraging state-of-the-art natural language processing (NLP) models, it provides key insights into the content, including a summary, benefits, and disadvantages. The tool also includes sentiment analysis and text-to-speech capabilities for a comprehensive document review experience.
 
-**Efficient Summarization**: Utilizes the BART model from the transformers library for high-quality text summarization.
-
-**Sentiment Analysis**: Analyzes the sentiment of the text using TextBlob, helping users quickly understand the nature of the document.
-
-**Text-to-Speech:** Converts text to speech using the pyttsx3 library, allowing users to listen to the summary.
-
-
-**Software Requirements**
-To run the Document Summarizer, you will need the following software:
-
-**Python**: Ensure you have Python installed (version 3.6 or higher recommended).
-**Tkinter**: A standard Python library for creating graphical user interfaces (comes pre-installed with Python).
-
-Required Python Libraries
-
-You can install the required libraries using pip:
-**transformers**: For the BART model used in text summarization.
-**pyttsx3**:For text-to-speech functionality.
-**textblob**: For sentiment analysis.
-
+Features
+Document Summarization: Automatically generate concise summaries of lengthy documents.
+Contextual Analysis: Extract benefits and disadvantages based on the document type.
+Sentiment Analysis: Evaluate the sentiment of the document's content to gauge its overall tone.
+Text-to-Speech: Read out the summary and evaluation for easy comprehension.
+Multi-format Support: Works with various document types including terms & conditions, rental & lease agreements, privacy policies, and employment contracts.
+Technologies Used
+Python: Core programming language.
+Transformers (Hugging Face): For NLP models, including BART for summarization and Roberta for question-answering.
+TextBlob: For sentiment analysis.
+Pyttsx3: For text-to-speech functionality.
+Tkinter: For the graphical user interface (GUI).
 
